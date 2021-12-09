@@ -2,4 +2,4 @@
 
 set -e
 
-python main.py
+cd /app/ && python main.py
