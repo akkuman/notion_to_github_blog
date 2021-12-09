@@ -21,7 +21,7 @@ class Notion:
         self.notion = Client(auth=token)
         self.database_id = database_id
     
-    def get_page_id(data: dict) -> list:
+    def get_page_id(self, data: dict) -> list:
         rich_text_node = data['properties'].get('Article', {})
         mentions = []
         if rich_text_node['type'] != 'rich_text':
@@ -200,6 +200,7 @@ def get_markdown_with_yaml_header(page_node: dict, article_content: str, notion:
     return f'---\n{header_text}\n---\n\n\n\n{article_content}'
 
 def save_markdown_file(path_prefix: str, content: str, filename: str):
+    logger.info(f'save markdwon file to {os.path.join(os.path.dirname(os.path.abspath(__file__)), path_prefix, filename)}')
     if not os.path.exists(path_prefix):
         os.makedirs(path_prefix)
     md_filepath = os.path.join(path_prefix, filename)
@@ -222,11 +223,13 @@ def main():
 
     notion = Notion(notion_token, notion_database_id)
     for page_node in notion.items_changed():
-        logger.info(page_node)
+        logger.info(f'get page content from notion...')
         page_id = notion.get_page_id(page_node)
         # 将page转化为markdown
+        logger.info(f'parse {notion.title(page_node)}...')
         markdown_text = NotionToMarkdown(notion_token, page_id).parse()
         # 提取markdown内的图片，放入自己的图床替换链接
+        logger.info(f'replace img link in article <<{notion.title(page_node)}>>...')
         img_store_kwargs = {
             'github_token': img_store_github_token,
             'repo': img_store_github_repo,
@@ -237,11 +240,14 @@ def main():
         img_handler = ImgHandler(markdown_text, img_store_type, **img_store_kwargs)
         markdown_text = img_handler.extract_n_replace_imglink()
         # 生成yaml标头的markdown供hugo生成
+        logger.info(f'generate and save article <<{notion.title(page_node)}>>...')
         markdown_with_header = get_markdown_with_yaml_header(page_node, markdown_text, notion)
         # 保存markdown到指定目录
         save_markdown_file(md_store_path_prefix, markdown_with_header, notion.md_filename(page_node))
         # 更新notion中的对应项
+        logger.info('update page property for article <<{notion.title(page_node)}>>...')
         notion.publish(page_node)
+        logger.info('all done!!!')
 
 if __name__ == '__main__':
     main()
