@@ -9,6 +9,12 @@ import base64
 from urllib.parse import urlparse
 import requests
 import yaml
+import logging
+
+logger=logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+formatter=logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger.addHandler(logging.StreamHandler())
 
 class Notion:
     def __init__(self, token, database_id):
@@ -216,6 +222,7 @@ def main():
 
     notion = Notion(notion_token, notion_database_id)
     for page_node in notion.items_changed():
+        logger.info(page_node)
         page_id = notion.get_page_id(page_node)
         # 将page转化为markdown
         markdown_text = NotionToMarkdown(notion_token, page_id).parse()
