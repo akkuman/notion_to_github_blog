@@ -16,4 +16,4 @@ RUN pip3 install --no-cache-dir --no-compile -r requirements.txt
 
 COPY ./entrypoint.sh ./main.py ./
 
-ENTRYPOINT ["/entrypoint.sh"]
+ENTRYPOINT ["./entrypoint.sh"]
