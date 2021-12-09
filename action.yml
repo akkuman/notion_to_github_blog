@@ -1,0 +1,37 @@
+name: 'Notion To Github Blog'
+description: 'Convert notion page to markdown for github blog'
+author: 'Akkuman <akkumans@qq.com>'
+branding:
+  icon: 'edit-3'
+  color: 'blue'
+inputs:
+  notion_token:
+    description: 'Notion Token'
+    required: true
+  notion_database_id:
+    description: 'Notion Database ID'
+    required: true
+  img_store_type:
+    description: 'Where to store image. Optional: local, github, Default: local'
+    required: false
+  img_store_path_prefix:
+    description: 'the dir where the image saved in, Default: static/notionimg'
+    required: false
+  img_store_url_path_prefix:
+    description: 'the prefix for image url in markdown (required when img_store_type=local), Default: /notionimg/'
+    required: false
+  img_store_github_token:
+    description: 'The github token to store image in repo (required when img_store_type=github)'
+    required: false
+  img_store_github_repo:
+    description: 'The github repo which you want to store image (required when img_store_type=github)'
+    required: false
+  img_store_github_branch:
+    description: 'The repo branch which you want to store image (required when img_store_type=github)'
+    required: false
+  md_store_path_prefix:
+    description: 'the dir where the markdown will save in, Default: content/posts'
+    required: false
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
