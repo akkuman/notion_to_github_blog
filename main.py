@@ -6,7 +6,6 @@ from github import Github
 from github import GithubException
 import hashlib
 import time
-import base64
 from urllib.parse import urlparse
 import requests
 import yaml
@@ -130,7 +129,7 @@ class ImgStoreRemoteGithub(ImgStore):
             gh_repo.create_file(
                 path=store_path,
                 message=f'notion img auto upload at {time.strftime("%Y-%m-%d %H:%M:%S")}',
-                content=base64.b64encode(self.img_data),
+                content=self.img_data,
                 branch=branch
             )
         except GithubException as e:
@@ -140,7 +139,7 @@ class ImgStoreRemoteGithub(ImgStore):
             gh_repo.update_file(
                 path=store_path,
                 message=f'notion img auto upload at {time.strftime("%Y-%m-%d %H:%M:%S")}',
-                content=base64.b64encode(self.img_data),
+                content=self.img_data,
                 sha=commit_sha
             )
         return f'https://raw.githubusercontent.com/{repo}/{branch}/{store_path}'
