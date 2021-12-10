@@ -261,4 +261,5 @@ def main():
         logger.info('all done!!!')
 
 if __name__ == '__main__':
+    logger.info('start parse notion for blog...')
     main()
