@@ -212,10 +212,10 @@ def get_markdown_with_yaml_header(page_node: dict, article_content: str, notion:
     return f'---\n{header_text}\n---\n\n\n\n{article_content}'
 
 def save_markdown_file(path_prefix: str, content: str, filename: str):
-    logger.info(f'save markdwon file to {os.path.join(os.path.dirname(os.path.abspath(__file__)), path_prefix, filename)}')
+    logger.info(f'save markdwon file to {os.path.join(os.getcwd(), path_prefix, filename)}')
     if not os.path.exists(path_prefix):
         os.makedirs(path_prefix)
-    md_filepath = os.path.join(path_prefix, filename)
+    md_filepath = os.path.join(os.getcwd(), path_prefix, filename)
     with open(md_filepath, 'w+', encoding='utf-8') as f:
         f.write(content)
 
