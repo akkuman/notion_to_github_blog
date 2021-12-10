@@ -236,6 +236,8 @@ def main():
     page_nodes = notion.items_changed()
     logger.info(f'it will update {len(page_nodes)} article...')
     for page_node in page_nodes:
+        if not notion.title(page_node).strip():
+            continue
         logger.info(f'get page content from notion...')
         page_id = notion.get_page_id(page_node)
         # 将page转化为markdown
