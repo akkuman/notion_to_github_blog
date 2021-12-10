@@ -260,7 +260,7 @@ def main():
         # 更新notion中的对应项
         logger.info('update page property for article <<{notion.title(page_node)}>>...')
         notion.publish(page_node)
-        logger.info('all done!!!')
+    logger.info('all done!!!')
 
 if __name__ == '__main__':
     logger.info('start parse notion for blog...')
