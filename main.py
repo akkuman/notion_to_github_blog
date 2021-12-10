@@ -55,8 +55,8 @@ class Notion:
             file_name += i['plain_text']
         return file_name
     
-    def category(self, data: dict) -> list:
-        return [data['properties'].get('Category', {}).get('select', {}).get('name', ''), ]
+    def category(self, data: dict) -> str:
+        return data['properties'].get('Category', {}).get('select', {}).get('name', '')
     
     def tags(self, data: dict) -> list:
         tags_ = []
@@ -205,7 +205,7 @@ def get_markdown_with_yaml_header(page_node: dict, article_content: str, notion:
         'date': notion.create_at(page_node),
         'showToc': True,
         'tags': notion.tags(page_node),
-        'categories': notion.category(page_node),
+        'categories': [notion.category(page_node), ],
     }
     header_text = yaml.dump(yaml_header, allow_unicode=True)
     return f'---\n{header_text}\n---\n\n\n\n{article_content}'
