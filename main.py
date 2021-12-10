@@ -233,7 +233,9 @@ def main():
     md_store_path_prefix = os.getenv(github_action_env('MD_STORE_PATH_PREFIX')) or 'content/posts' # 保存markdown文件的目录
 
     notion = Notion(notion_token, notion_database_id)
-    for page_node in notion.items_changed():
+    page_nodes = notion.items_changed()
+    logger.info(f'it will update {len(page_nodes)} article...')
+    for page_node in page_nodes:
         logger.info(f'get page content from notion...')
         page_id = notion.get_page_id(page_node)
         # 将page转化为markdown
