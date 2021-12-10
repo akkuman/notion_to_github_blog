@@ -170,7 +170,7 @@ class ImgHandler:
         markdown_text: markdown文本
         img_store_type： img储存类型：local, github
     '''
-    pattern = re.compile(r'(!\[[^\]]*\]\((.*?)\s*("(?:.*[^"])")?\s*\))')
+    pattern = re.compile(r'^(!\[[^\]]*\]\((.*?)\s*("(?:.*[^"])")?\s*\))')
 
     def __init__(self, markdown_text, img_store_type, **kwargs):
         self.markdown_text = markdown_text
