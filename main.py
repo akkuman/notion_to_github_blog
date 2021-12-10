@@ -159,7 +159,7 @@ class ImgHandler:
         markdown_text: markdown文本
         img_store_type： img储存类型：local, github
     '''
-    pattern = re.compile(r'!\[[^\]]*\]\((.*?)\s*("(?:.*[^"])")?\s*\)')
+    pattern = re.compile(r'(!\[[^\]]*\]\((.*?)\s*("(?:.*[^"])")?\s*\))')
 
     def __init__(self, markdown_text, img_store_type, **kwargs):
         self.markdown_text = markdown_text
@@ -178,6 +178,7 @@ class ImgHandler:
         return requests.get(url).content
 
     def extract_n_replace_imglink(self) -> str:
+        self.pattern.
         for item in self.pattern.findall(self.markdown_text):
             match_text = item[0]
             imglink = item[1]
@@ -226,7 +227,7 @@ def main():
         logger.info(f'get page content from notion...')
         page_id = notion.get_page_id(page_node)
         # 将page转化为markdown
-        logger.info(f'parse {notion.title(page_node)}...')
+        logger.info(f'parse <<{notion.title(page_node)}>>...')
         markdown_text = NotionToMarkdown(notion_token, page_id).parse()
         # 提取markdown内的图片，放入自己的图床替换链接
         logger.info(f'replace img link in article <<{notion.title(page_node)}>>...')
