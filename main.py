@@ -3,6 +3,7 @@ from notion_client import Client
 from notiontomd import NotionToMarkdown
 import re
 from github import Github
+from github import GithubException
 import hashlib
 import time
 import base64
@@ -125,12 +126,23 @@ class ImgStoreRemoteGithub(ImgStore):
         gh = Github(github_token)
         gh_repo = gh.get_repo(repo)
         store_path = self.get_store_path(store_path_prefix)
-        gh_repo.create_file(
-            path=store_path,
-            message=f'notion img auto upload at {time.strftime("%Y-%m-%d %H:%M:%S")}',
-            content=base64.b64encode(self.img_data),
-            branch=branch
-        )
+        try:
+            gh_repo.create_file(
+                path=store_path,
+                message=f'notion img auto upload at {time.strftime("%Y-%m-%d %H:%M:%S")}',
+                content=base64.b64encode(self.img_data),
+                branch=branch
+            )
+        except GithubException as e:
+            if e.status != 422:
+                raise
+            commit_sha = gh_repo.get_comments(path=store_path)[0].sha
+            gh_repo.update_file(
+                path=store_path,
+                message=f'notion img auto upload at {time.strftime("%Y-%m-%d %H:%M:%S")}',
+                content=base64.b64encode(self.img_data),
+                sha=commit_sha
+            )
         return f'https://raw.githubusercontent.com/{repo}/{branch}/{store_path}'
 
 class ImgStoreLocal(ImgStore):
@@ -148,7 +160,7 @@ class ImgStoreLocal(ImgStore):
         if not os.path.exists(store_path_prefix):
             os.makedirs(store_path_prefix)
         store_path = self.get_img_path(self, store_path_prefix)
-        with open(store_path, 'rw+') as f:
+        with open(store_path, 'wb+') as f:
             f.write(self.img_data)
         return self.get_img_path(self, url_path_prefix)
 
