@@ -94,8 +94,8 @@ jobs:
 - **img_store_github_branch**: 当 `img_store_type=github` 时需要，你把哪个github图床仓库的哪一个分支当作图床
 - **md_store_path_prefix**: 最后生成的markdown文件保存在哪，默认是当前仓库目录的 `content/posts` 目录下
 
-其中需要注意的是
+其中需要关注的是
 
 1. `token: ${{ secrets.CHECKOUT_TOKEN }}` 是为了后面的 `push to github` 推送后能够触发另外一个action流程，否则无法触发，其中的 `CHECKOUT_TOKEN` 为你创建的 Personal Access Token，具体可以查看我上面的注释
-2. `on: issues: types: [opened]` 的主要作用是当打开或提交一个issue时触发该action
+2. `on: issues: types: [opened]` 的主要作用是当打开或提交一个issue时触发该action，**注意**: 只有当该workflows在主分支时，使用 `issues` 作为触发条件才会生效，我个人是将 `hugo` 作为主分支，将 `master` 作为 `Github Pages` 分支
 3. `if: ${{ github.event.issue.user.login == github.actor && contains(github.event.issue.title, 'notion-ci') }}` 的主要作用是：当提交issue的人是你自己，并且issue标题包含 notion-ci 时进行action流程
