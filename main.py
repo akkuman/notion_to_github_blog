@@ -178,7 +178,6 @@ class ImgHandler:
         return requests.get(url).content
 
     def extract_n_replace_imglink(self) -> str:
-        self.pattern.
         for item in self.pattern.findall(self.markdown_text):
             match_text = item[0]
             imglink = item[1]
