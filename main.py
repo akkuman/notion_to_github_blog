@@ -207,7 +207,7 @@ def get_markdown_with_yaml_header(page_node: dict, article_content: str, notion:
         'tags': notion.tags(page_node),
         'categories': notion.category(page_node),
     }
-    header_text = yaml.dump(yaml_header)
+    header_text = yaml.dump(yaml_header, allow_unicode=True)
     return f'---\n{header_text}\n---\n\n\n\n{article_content}'
 
 def save_markdown_file(path_prefix: str, content: str, filename: str):
