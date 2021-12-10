@@ -135,12 +135,12 @@ class ImgStoreRemoteGithub(ImgStore):
         except GithubException as e:
             if e.status != 422:
                 raise
-            commit_sha = gh_repo.get_commits(path=store_path)[0].sha
+            blob_sha = gh_repo.get_contents(path=store_path).sha
             gh_repo.update_file(
                 path=store_path,
                 message=f'notion img auto upload at {time.strftime("%Y-%m-%d %H:%M:%S")}',
                 content=self.img_data,
-                sha=commit_sha
+                sha=blob_sha
             )
         return f'https://raw.githubusercontent.com/{repo}/{branch}/{store_path}'
 
