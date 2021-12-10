@@ -56,7 +56,7 @@ class Notion:
         return file_name
     
     def category(self, data: dict) -> list:
-        return data['properties'].get('Category', {}).get('select', {}).get('name', '')
+        return [data['properties'].get('Category', {}).get('select', {}).get('name', ''), ]
     
     def tags(self, data: dict) -> list:
         tags_ = []
