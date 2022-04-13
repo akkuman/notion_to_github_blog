@@ -171,6 +171,8 @@ class ImgHandler:
         img_store_type： img储存类型：local, github
     '''
     pattern = re.compile(r'^(!\[[^\]]*\]\((.*?)\s*("(?:.*[^"])")?\s*\))', re.MULTILINE)
+    
+    exclude_pattern = re.compile(r'^https://kroki.io/')
 
     def __init__(self, markdown_text, img_store_type, **kwargs):
         self.markdown_text = markdown_text
@@ -187,11 +189,18 @@ class ImgHandler:
     
     def get_img_data_from_url(self, url):
         return requests.get(url).content
+    
+    def is_exclude(self, imglink):
+        if self.exclude_pattern.search(imglink):
+            return True
+        return False
 
     def extract_n_replace_imglink(self) -> str:
         for item in self.pattern.findall(self.markdown_text):
             match_text = item[0]
             imglink = item[1]
+            if self.is_exclude(imglink):
+                continue
             img_ext = self.get_ext_from_imglink(imglink)
             img_data = self.get_img_data_from_url(imglink)
             new_imglink = self.img_handler_cls(img_data, img_ext, **self.kwargs).store()
